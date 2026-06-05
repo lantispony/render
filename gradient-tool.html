@@ -44,13 +44,17 @@ input[type="checkbox"] { accent-color:#FFD700; width:15px; height:15px; cursor:p
 .tab.active { background:rgba(255,215,0,0.06); border-color:rgba(255,215,0,0.15); color:#FFD700; }
 .tab:hover { border-color:rgba(255,215,0,0.12); color:rgba(255,255,255,0.5); }
 
-.gbar { height:22px; border-radius:5px; cursor:pointer; position:relative; border:1px solid rgba(255,215,0,0.06); background:repeating-conic-gradient(#1a1a1a 0% 25%,#2a2a2a 0% 50%) 0 0/8px 8px; overflow:hidden; }
-.gbar-fill { height:100%; border-radius:4px; position:relative; z-index:1; }
-.smarks { position:relative; height:16px; }
-.smark { position:absolute; width:16px; height:16px; margin-left:-8px; z-index:2; display:flex; flex-direction:column; align-items:center; cursor:ew-resize; }
-.smark .arr { width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-top:9px solid #666; transition:border-top-color 0.15s; }
-.smark.active .arr { border-top-color:#FFD700; }
-.smark .ln { width:2px; height:7px; background:rgba(255,255,255,0.25); margin-top:-2px; }
+.gbar-wrap { position:relative; display:flex; flex-direction:column; gap:0; }
+.gbar { height:22px; cursor:pointer; position:relative; border:1px solid rgba(255,215,0,0.06); border-bottom:none; border-radius:5px 5px 0 0; background:repeating-conic-gradient(#1a1a1a 0% 25%,#2a2a2a 0% 50%) 0 0/8px 8px; overflow:hidden; }
+.gbar-fill { height:100%; border-radius:4px 4px 0 0; position:relative; z-index:1; }
+.smarks { position:relative; height:18px; background:rgba(255,255,255,0.015); border:1px solid rgba(255,215,0,0.06); border-top:none; border-bottom:none; cursor:pointer; }
+.smark { position:absolute; width:12px; height:34px; margin-left:-6px; top:-22px; z-index:3; cursor:ew-resize; }
+.smark-tail { width:2px; height:22px; margin:0 auto; background:rgba(255,255,255,0.08); pointer-events:none; }
+.smark-diamond { width:12px; height:12px; background:#888; clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); transition:background 0.15s; }
+.smark.active .smark-diamond { background:#FFD700; }
+.gbar-deleter { height:8px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,215,0,0.06); border-top:none; border-radius:0 0 5px 5px; font-size:7px; color:rgba(255,255,255,0.05); text-align:center; line-height:8px; transition:background 0.15s; }
+.gbar-deleter.drag-over { background:rgba(255,68,68,0.08); }
+.gbar-deleter.drag-over .deleter-hint { color:rgba(255,68,68,0.3); }
 
 .sel-stop { background:rgba(255,215,0,0.02); border-radius:6px; padding:10px 12px; border:1px solid rgba(255,215,0,0.06); display:flex; flex-direction:column; gap:8px; }
 .sel-stop .sr { display:flex; gap:8px; align-items:center; }
@@ -105,16 +109,14 @@ button:active { transform:scale(0.96); }
 textarea { background:rgba(255,255,255,0.07); border:1px solid rgba(255,215,0,0.12); border-radius:5px; padding:8px; color:#f0f0f0; font-family:'JetBrains Mono',monospace; font-size:12px; resize:vertical; outline:none; line-height:1.4; width:100%; }
 textarea:focus { border-color:rgba(255,215,0,0.15); }
 
-.saved-list { display:flex; flex-direction:column; gap:2px; max-height:110px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,215,0,0.2) rgba(255,255,255,0.03); }
+.saved-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); gap:4px; max-height:96px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,215,0,0.2) rgba(255,255,255,0.03); }
 .saved-list::-webkit-scrollbar { width:4px; }
 .saved-list::-webkit-scrollbar-track { background:rgba(255,255,255,0.03); border-radius:2px; }
 .saved-list::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.2); border-radius:2px; }
-.saved-item { display:flex; align-items:center; gap:4px; padding:3px 6px; background:rgba(255,215,0,0.015); border-radius:4px; border:1px solid rgba(255,215,0,0.03); cursor:pointer; }
-.saved-item:hover { border-color:rgba(255,215,0,0.1); }
-.saved-item .sw { border-radius:2px; border:1px solid rgba(255,255,255,0.03); flex-shrink:0; }
-.saved-item .nm { flex:1; font-size:12px; color:rgba(255,255,255,0.35); text-align:right; padding-right:4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.saved-item .dx { cursor:pointer; color:rgba(255,255,255,0.1); font-size:13px; flex-shrink:0; }
-.saved-item .dx:hover { color:#ff4444; }
+.saved-item { aspect-ratio:1; border-radius:4px; cursor:pointer; border:2px solid transparent; transition:border-color 0.15s; position:relative; }
+.saved-item:hover { border-color:rgba(255,215,0,0.2); }
+.saved-item .dx { position:absolute; top:-5px; right:-5px; width:14px; height:14px; background:rgba(0,0,0,0.7); border-radius:50%; text-align:center; line-height:14px; font-size:10px; color:#ff4444; display:none; cursor:pointer; }
+.saved-item:hover .dx { display:block; }
 .saved-item-fx { display:flex; align-items:center; gap:6px; padding:3px 6px; background:rgba(255,215,0,0.015); border-radius:4px; border:1px solid rgba(255,215,0,0.03); cursor:pointer; }
 .saved-item-fx:hover { border-color:rgba(255,215,0,0.1); }
 .saved-item-fx .nm { flex:1; font-size:12px; color:rgba(255,255,255,0.35); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -171,8 +173,11 @@ textarea:focus { border-color:rgba(255,215,0,0.15); }
       <div class="saved-list" id="cardSavedList" style="display:none"></div>
       <div class="sec">
         <span class="lbl" data-lang="stops">色標</span>
-        <div class="gbar" id="cardBar"><div class="gbar-fill" id="cardBarFill"></div></div>
-        <div class="smarks" id="cardSmarks"></div>
+        <div class="gbar-wrap">
+          <div class="gbar" id="cardBar"><div class="gbar-fill" id="cardBarFill"></div></div>
+          <div class="smarks" id="cardSmarks"></div>
+          <div class="gbar-deleter" id="cardDeleter"><span class="deleter-hint">✕</span></div>
+        </div>
       </div>
       <div class="sel-stop">
         <div class="sr">
@@ -236,8 +241,11 @@ textarea:focus { border-color:rgba(255,215,0,0.15); }
         <div class="saved-list" id="txtSavedList" style="display:none"></div>
         <div class="sec">
           <span class="lbl" data-lang="stops">色標</span>
-          <div class="gbar" id="txtBar"><div class="gbar-fill" id="txtBarFill"></div></div>
-          <div class="smarks" id="txtSmarks"></div>
+          <div class="gbar-wrap">
+            <div class="gbar" id="txtBar"><div class="gbar-fill" id="txtBarFill"></div></div>
+            <div class="smarks" id="txtSmarks"></div>
+            <div class="gbar-deleter" id="txtDeleter"><span class="deleter-hint">✕</span></div>
+          </div>
         </div>
         <div class="sel-stop">
           <div class="sr">
@@ -377,8 +385,11 @@ textarea:focus { border-color:rgba(255,215,0,0.15); }
       <div class="saved-list" id="iconSavedList" style="display:none"></div>
       <div class="sec">
         <span class="lbl" data-lang="stops">色標</span>
-        <div class="gbar" id="iconBar"><div class="gbar-fill" id="iconBarFill"></div></div>
-        <div class="smarks" id="iconSmarks"></div>
+        <div class="gbar-wrap">
+          <div class="gbar" id="iconBar"><div class="gbar-fill" id="iconBarFill"></div></div>
+          <div class="smarks" id="iconSmarks"></div>
+          <div class="gbar-deleter" id="iconDeleter"><span class="deleter-hint">✕</span></div>
+        </div>
       </div>
       <div class="sel-stop">
         <div class="sr">
@@ -615,17 +626,20 @@ function renderSaved(){
   const list=loadSaved();
   ['cardSavedList','txtSavedList','iconSavedList'].forEach(tid=>{
     const c=document.getElementById(tid);if(!c)return;c.innerHTML='';
-    if(!list.length){c.innerHTML=`<div style="font-size:11px;color:rgba(255,255,255,0.1);padding:2px 4px">${LANG_DATA[currentLang].emptySaved}</div>`;return;}
+    if(!list.length){c.innerHTML='';return;}
     list.forEach((item,i)=>{
       const d=document.createElement('div');d.className='saved-item';
       const css=item.type==='linear'?`linear-gradient(${item.angle}deg,${item.stops.map(s=>`${s.color} ${s.pos}%`).join(',')})`:`radial-gradient(circle,${item.stops.map(s=>`${s.color} ${s.pos}%`).join(',')})`;
-      d.innerHTML=`<div class="sw" style="background:${css};width:72px;height:18px;flex-shrink:0"></div><div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:4px;overflow:hidden"><span class="nm">${item.name}</span><span class="dx" data-idx="${i}">×</span></div>`;
-      d.addEventListener('click',()=>{
+      d.style.background=css;
+      d.innerHTML='<span class="dx" data-idx="'+i+'">×</span>';
+      d.addEventListener('click',(e)=>{
+        if(e.target.classList.contains('dx'))return;
         const gr=loadSaved()[i];if(!gr)return;
         Object.assign(gradients[activeGrad],JSON.parse(JSON.stringify(gr)));
         loadGradToUI();
       });
-      d.querySelector('.dx').addEventListener('click',(e)=>{e.stopPropagation();const l=loadSaved();l.splice(+e.target.dataset.idx,1);saveSaved(l);renderSaved();renderRefSelects();});
+      const dx=d.querySelector('.dx');
+      if(dx)dx.addEventListener('click',(e)=>{e.stopPropagation();const l=loadSaved();l.splice(+e.target.dataset.idx,1);saveSaved(l);renderSaved();renderRefSelects();});
       c.appendChild(d);
     });
   });
@@ -699,11 +713,11 @@ function renderStops(which){
   const pfx=barPfx(which);
   const c=document.getElementById(pfx+'Smarks');if(!c)return;c.innerHTML='';
   const bar=document.getElementById(pfx+'Bar');if(!bar)return;
-  const bw=bar.offsetWidth||300;
+  const bw=Math.max(bar.offsetWidth||300,1);
   g.stops.forEach((s,i)=>{
     const m=document.createElement('div');m.className='smark'+(i===selIdx?' active':'');
-    m.dataset.idx=i;m.style.left=(s.pos/100*bw)+'px';
-    m.innerHTML='<div class="arr"></div><div class="ln"></div>';
+    m.dataset.idx=i;m.style.left=Math.round(s.pos/100*bw)+'px';
+    m.innerHTML='<div class="smark-tail"></div><div class="smark-diamond"></div>';
     m.addEventListener('mousedown',(e)=>{e.preventDefault();dragIdx=i;selIdx=i;isDrag=true;renderAll(which);startDrag(which,e);});
     c.appendChild(m);
   });
@@ -721,24 +735,47 @@ function renderSelPanel(which){
 }
 function startDrag(which,e){
   const bar=document.getElementById(which+'Bar');if(!bar)return;
+  const pfx=barPfx(which);
+  const deleter=document.getElementById(pfx+'Deleter');
   const rect=bar.getBoundingClientRect();const g=getGrad(which);
+  const deleterRect=deleter?deleter.getBoundingClientRect():null;
+  const deleteThreshold=deleterRect?deleterRect.top+deleterRect.height/2:rect.bottom+30;
+  let deleted=false;
   const onMove=(ev)=>{
     const pct=Math.max(0,Math.min(100,Math.round(((ev.clientX-rect.left)/rect.width)*100)));
     g.stops[dragIdx].pos=pct;renderAll(which);
+    if(deleter){
+      if(ev.clientY>=deleteThreshold){
+        deleter.classList.add('drag-over');
+      }else{
+        deleter.classList.remove('drag-over');
+      }
+    }
   };
-  const onUp=()=>{isDrag=false;dragIdx=-1;document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);};
+  const onUp=(ev)=>{
+    if(deleter)deleter.classList.remove('drag-over');
+    if(ev.clientY>=deleteThreshold&&g.stops.length>2){
+      g.stops.splice(dragIdx,1);selIdx=Math.min(selIdx,g.stops.length-1);
+    }
+    isDrag=false;dragIdx=-1;renderAll(which);
+    document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
+  };
   document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);onMove(e);
 }
 
 function bindGradEvents(p){
   const bpfx=p==='text'?'txt':p;
   const bar=document.getElementById(bpfx+'Bar');
+  // Bar click: select nearest stop (don't add new stop — use smarks area for that)
   if(bar){
     const nb=bar.cloneNode(true);bar.parentNode.replaceChild(nb,bar);
     nb.addEventListener('click',(e)=>{
-      isDrag=false;const g=getGrad(p);if(!g)return;
-      const r=nb.getBoundingClientRect();const pct=Math.round(((e.clientX-r.left)/r.width)*100);
-      const ns={color:neighborColor(g.stops,pct),alpha:1,pos:pct};g.stops.push(ns);g.stops.sort((a,b)=>a.pos-b.pos);selIdx=g.stops.indexOf(ns);renderAll(p);
+      const g=getGrad(p);if(!g||!g.stops.length)return;
+      const r=nb.getBoundingClientRect();
+      const pct=((e.clientX-r.left)/r.width)*100;
+      let nearest=0,minDist=Infinity;
+      g.stops.forEach((s,i)=>{const d=Math.abs(s.pos-pct);if(d<minDist){minDist=d;nearest=i;}});
+      selIdx=nearest;renderAll(p);
     });
   }
   function rebind(id,fn){const el=document.getElementById(id);if(!el)return;const c=el.cloneNode(true);el.parentNode.replaceChild(c,el);c.addEventListener('input',fn);c.addEventListener('change',fn);return c;}
@@ -767,6 +804,23 @@ function bindGradEvents(p){
     }
     this.value='';loadGradToUI();
   });
+
+  // Smarks click to add stop
+  const smEl=document.getElementById(barPfx(p)+'Smarks');
+  if(smEl){
+    const smClone=smEl.cloneNode(true);smEl.parentNode.replaceChild(smClone,smEl);
+    smClone.addEventListener('click',function(e){
+      if(isDrag)return;
+      const g=getGrad(p);if(!g)return;
+      const barEl=document.getElementById(barPfx(p)+'Bar');
+      if(!barEl)return;
+      const r=barEl.getBoundingClientRect();
+      const pct=Math.round(((e.clientX-r.left)/r.width)*100);
+      const ns={color:neighborColor(g.stops,pct),alpha:1,pos:pct};
+      g.stops.push(ns);g.stops.sort((a,b)=>a.pos-b.pos);
+      selIdx=g.stops.indexOf(ns);renderAll(p);
+    });
+  }
 }
 
 ['card','text','icon'].forEach(p=>bindGradEvents(p));
