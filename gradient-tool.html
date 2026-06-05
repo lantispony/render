@@ -44,17 +44,13 @@ input[type="checkbox"] { accent-color:#FFD700; width:15px; height:15px; cursor:p
 .tab.active { background:rgba(255,215,0,0.06); border-color:rgba(255,215,0,0.15); color:#FFD700; }
 .tab:hover { border-color:rgba(255,215,0,0.12); color:rgba(255,255,255,0.5); }
 
-.gbar-wrap { position:relative; display:flex; flex-direction:column; gap:0; }
-.gbar { height:22px; cursor:pointer; position:relative; border:1px solid rgba(255,215,0,0.06); border-bottom:none; border-radius:5px 5px 0 0; background:repeating-conic-gradient(#1a1a1a 0% 25%,#2a2a2a 0% 50%) 0 0/8px 8px; overflow:hidden; }
-.gbar-fill { height:100%; border-radius:4px 4px 0 0; position:relative; z-index:1; }
-.smarks { position:relative; height:18px; background:rgba(255,255,255,0.015); border:1px solid rgba(255,215,0,0.06); border-top:none; border-bottom:none; cursor:pointer; }
-.smark { position:absolute; width:12px; height:34px; margin-left:-6px; top:-22px; z-index:3; cursor:ew-resize; }
-.smark-tail { width:2px; height:22px; margin:0 auto; background:rgba(255,255,255,0.08); pointer-events:none; }
+.gbar-wrap { position:relative; display:flex; flex-direction:column; gap:0; border:1px solid rgba(255,215,0,0.06); border-radius:5px; }
+.gbar { height:22px; cursor:pointer; position:relative; overflow:hidden; background:repeating-conic-gradient(#1a1a1a 0% 25%,#2a2a2a 0% 50%) 0 0/8px 8px; }
+.gbar-fill { height:100%; position:relative; z-index:1; }
+.smarks { position:relative; height:18px; background:rgba(255,255,255,0.015); border-top:1px solid rgba(255,215,0,0.06); cursor:pointer; }
+.smark { position:absolute; width:12px; height:12px; margin-left:-6px; top:-6px; z-index:3; cursor:ew-resize; }
 .smark-diamond { width:12px; height:12px; background:#888; clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%); transition:background 0.15s; }
 .smark.active .smark-diamond { background:#FFD700; }
-.gbar-deleter { height:8px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,215,0,0.06); border-top:none; border-radius:0 0 5px 5px; font-size:7px; color:rgba(255,255,255,0.05); text-align:center; line-height:8px; transition:background 0.15s; }
-.gbar-deleter.drag-over { background:rgba(255,68,68,0.08); }
-.gbar-deleter.drag-over .deleter-hint { color:rgba(255,68,68,0.3); }
 
 .sel-stop { background:rgba(255,215,0,0.02); border-radius:6px; padding:10px 12px; border:1px solid rgba(255,215,0,0.06); display:flex; flex-direction:column; gap:8px; }
 .sel-stop .sr { display:flex; gap:8px; align-items:center; }
@@ -63,7 +59,7 @@ input[type="color"]::-webkit-color-swatch-wrapper { padding:0!important; width:1
 input[type="color"]::-webkit-color-swatch { border:none!important; border-radius:0; width:100%; height:100%; }
 .sel-stop .hx { flex:1; }
 .sel-stop .ps { width:46px; text-align:center; }
-.sel-stop .del { cursor:pointer; color:#ff4444; font-size:17px; width:18px; text-align:center; flex-shrink:0; }
+
 .sel-stop .sl { display:flex; gap:6px; align-items:center; }
 .sel-stop .sl label { font-size:11px; color:rgba(255,255,255,0.5); min-width:50px; text-transform:uppercase; flex-shrink:0; letter-spacing:1px; }
 .sel-stop .sl input[type="range"] { flex:1; }
@@ -109,7 +105,8 @@ button:active { transform:scale(0.96); }
 textarea { background:rgba(255,255,255,0.07); border:1px solid rgba(255,215,0,0.12); border-radius:5px; padding:8px; color:#f0f0f0; font-family:'JetBrains Mono',monospace; font-size:12px; resize:vertical; outline:none; line-height:1.4; width:100%; }
 textarea:focus { border-color:rgba(255,215,0,0.15); }
 
-.saved-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(52px,1fr)); gap:4px; max-height:96px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,215,0,0.2) rgba(255,255,255,0.03); }
+.saved-lbl { font-size:11px; color:rgba(255,215,0,0.6); letter-spacing:2px; text-transform:uppercase; font-weight:700; margin-bottom:2px; }
+.saved-list { display:grid; grid-template-columns:repeat(6,1fr); gap:4px; max-height:232px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,215,0,0.2) rgba(255,255,255,0.03); }
 .saved-list::-webkit-scrollbar { width:4px; }
 .saved-list::-webkit-scrollbar-track { background:rgba(255,255,255,0.03); border-radius:2px; }
 .saved-list::-webkit-scrollbar-thumb { background:rgba(255,215,0,0.2); border-radius:2px; }
@@ -169,20 +166,18 @@ textarea:focus { border-color:rgba(255,215,0,0.15); }
         <span class="lbl" data-lang="applyGrad">套用漸層</span>
         <select id="cardGradRef"></select>
       </div>
-      <div class="saved-toggle" id="cardSavedToggle" data-lang="savedToggle">保存樣式清單</div>
-      <div class="saved-list" id="cardSavedList" style="display:none"></div>
+      <div class="saved-lbl" data-lang="savedToggle">Saved Styles</div>
+      <div class="saved-list" id="cardSavedList"></div>
       <div class="sec">
         <span class="lbl" data-lang="stops">色標</span>
         <div class="gbar-wrap">
           <div class="gbar" id="cardBar"><div class="gbar-fill" id="cardBarFill"></div></div>
           <div class="smarks" id="cardSmarks"></div>
-          <div class="gbar-deleter" id="cardDeleter"><span class="deleter-hint">✕</span></div>
         </div>
       </div>
       <div class="sel-stop">
         <div class="sr">
           <input type="color" id="cardSelCol"><input type="text" class="hx" id="cardSelHex"><input type="number" class="ps" id="cardSelPos" min="0" max="100" step="1">
-          <span class="del" id="cardDelStop">×</span>
         </div>
         <div class="sl"><label data-lang="opacity">不透明度</label><input type="range" id="cardSelAlp" min="0" max="100" value="100"><input type="number" class="sv" id="cardSelAlpV" min="0" max="100" step="1" value="100"></div>
         <div class="sl"><label data-lang="angle">角度</label><input type="range" id="cardAngle" min="0" max="360" value="135"><input type="number" class="sv" id="cardAngleV" min="0" max="360" step="1" value="135"></div>
@@ -237,20 +232,18 @@ textarea:focus { border-color:rgba(255,215,0,0.15); }
           <span class="lbl" data-lang="applyGrad">套用漸層</span>
           <select id="txtGradRef"></select>
         </div>
-        <div class="saved-toggle" id="txtSavedToggle" data-lang="savedToggle">保存樣式清單</div>
-        <div class="saved-list" id="txtSavedList" style="display:none"></div>
+        <div class="saved-lbl" data-lang="savedToggle">Saved Styles</div>
+        <div class="saved-list" id="txtSavedList"></div>
         <div class="sec">
           <span class="lbl" data-lang="stops">色標</span>
           <div class="gbar-wrap">
             <div class="gbar" id="txtBar"><div class="gbar-fill" id="txtBarFill"></div></div>
             <div class="smarks" id="txtSmarks"></div>
-            <div class="gbar-deleter" id="txtDeleter"><span class="deleter-hint">✕</span></div>
           </div>
         </div>
         <div class="sel-stop">
           <div class="sr">
             <input type="color" id="txtSelCol"><input type="text" class="hx" id="txtSelHex"><input type="number" class="ps" id="txtSelPos" min="0" max="100" step="1">
-            <span class="del" id="txtDelStop">×</span>
           </div>
           <div class="sl"><label data-lang="opacity">不透明度</label><input type="range" id="txtSelAlp" min="0" max="100" value="100"><input type="number" class="sv" id="txtSelAlpV" min="0" max="100" step="1" value="100"></div>
           <div class="sl"><label data-lang="angle">角度</label><input type="range" id="txtGradAngle" min="0" max="360" value="90"><input type="number" class="sv" id="txtAngleV" min="0" max="360" step="1" value="90"></div>
@@ -381,20 +374,18 @@ textarea:focus { border-color:rgba(255,215,0,0.15); }
         <span class="lbl" data-lang="applyGrad">套用漸層</span>
         <select id="iconGradRef"></select>
       </div>
-      <div class="saved-toggle" id="iconSavedToggle" data-lang="savedToggle">保存樣式清單</div>
-      <div class="saved-list" id="iconSavedList" style="display:none"></div>
+      <div class="saved-lbl" data-lang="savedToggle">Saved Styles</div>
+      <div class="saved-list" id="iconSavedList"></div>
       <div class="sec">
         <span class="lbl" data-lang="stops">色標</span>
         <div class="gbar-wrap">
           <div class="gbar" id="iconBar"><div class="gbar-fill" id="iconBarFill"></div></div>
           <div class="smarks" id="iconSmarks"></div>
-          <div class="gbar-deleter" id="iconDeleter"><span class="deleter-hint">✕</span></div>
         </div>
       </div>
       <div class="sel-stop">
         <div class="sr">
           <input type="color" id="iconSelCol"><input type="text" class="hx" id="iconSelHex"><input type="number" class="ps" id="iconSelPos" min="0" max="100" step="1">
-          <span class="del" id="iconDelStop">×</span>
         </div>
         <div class="sl"><label data-lang="opacity">不透明度</label><input type="range" id="iconSelAlp" min="0" max="100" value="100"><input type="number" class="sv" id="iconSelAlpV" min="0" max="100" step="1" value="100"></div>
         <div class="sl"><label data-lang="angle">角度</label><input type="range" id="iconGradAngle" min="0" max="360" value="45"><input type="number" class="sv" id="iconAngleV" min="0" max="360" step="1" value="45"></div>
@@ -646,20 +637,7 @@ function renderSaved(){
   renderRefSelects();
 }
 
-let savedExpanded=false;
-function toggleSaved(){
-  savedExpanded=!savedExpanded;
-  document.querySelectorAll('.saved-toggle[id$="SavedToggle"]').forEach(el=>{
-    if(!['shSavedToggle','sh2SavedToggle','dsSavedToggle','glSavedToggle'].includes(el.id))
-      el.textContent=LANG_DATA[currentLang].savedToggle;
-  });
-  const listId=activeGrad==='text'?'txtSavedList':activeGrad+'SavedList';
-  const l=document.getElementById(listId);if(l)l.style.display=savedExpanded?'':'none';
-  renderSaved();
-}
-['cardSavedToggle','txtSavedToggle','iconSavedToggle'].forEach(id=>{
-  document.getElementById(id).onclick=toggleSaved;
-});
+// Gradient saved lists are always visible
 
 // ---- Gradient save modal ----
 function openGradModal(which){
@@ -717,7 +695,7 @@ function renderStops(which){
   g.stops.forEach((s,i)=>{
     const m=document.createElement('div');m.className='smark'+(i===selIdx?' active':'');
     m.dataset.idx=i;m.style.left=Math.round(s.pos/100*bw)+'px';
-    m.innerHTML='<div class="smark-tail"></div><div class="smark-diamond"></div>';
+    m.innerHTML='<div class="smark-diamond"></div>';
     m.addEventListener('mousedown',(e)=>{e.preventDefault();dragIdx=i;selIdx=i;isDrag=true;renderAll(which);startDrag(which,e);});
     c.appendChild(m);
   });
@@ -734,32 +712,22 @@ function renderSelPanel(which){
   sv(anId,g.angle);sv(anVId,g.angle);
 }
 function startDrag(which,e){
-  const bar=document.getElementById(which+'Bar');if(!bar)return;
   const pfx=barPfx(which);
-  const deleter=document.getElementById(pfx+'Deleter');
-  const rect=bar.getBoundingClientRect();const g=getGrad(which);
-  const deleterRect=deleter?deleter.getBoundingClientRect():null;
-  const deleteThreshold=deleterRect?deleterRect.top+deleterRect.height/2:rect.bottom+30;
-  let deleted=false;
+  const bar=document.getElementById(pfx+'Bar');if(!bar)return;
+  const g=getGrad(which);
+  const rect=bar.getBoundingClientRect();
+  const deleteThreshold=rect.bottom+18;
   const onMove=(ev)=>{
-    const pct=Math.max(0,Math.min(100,Math.round(((ev.clientX-rect.left)/rect.width)*100)));
-    g.stops[dragIdx].pos=pct;renderAll(which);
-    if(deleter){
-      if(ev.clientY>=deleteThreshold){
-        deleter.classList.add('drag-over');
-      }else{
-        deleter.classList.remove('drag-over');
-      }
-    }
-  };
-  const onUp=(ev)=>{
-    if(deleter)deleter.classList.remove('drag-over');
-    if(ev.clientY>=deleteThreshold&&g.stops.length>2){
+    if(ev.clientY>=deleteThreshold&&g.stops.length>2&&dragIdx>=0){
       g.stops.splice(dragIdx,1);selIdx=Math.min(selIdx,g.stops.length-1);
+      isDrag=false;dragIdx=-1;renderAll(which);
+      document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
+      return;
     }
-    isDrag=false;dragIdx=-1;renderAll(which);
-    document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);
+    const pct=Math.max(0,Math.min(100,Math.round(((ev.clientX-rect.left)/rect.width)*100)));
+    if(dragIdx>=0&&dragIdx<g.stops.length){g.stops[dragIdx].pos=pct;renderAll(which);}
   };
+  const onUp=()=>{isDrag=false;dragIdx=-1;renderAll(which);document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);};
   document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);onMove(e);
 }
 
@@ -791,9 +759,6 @@ function bindGradEvents(p){
   rebind(spfx+'SelPos',function(){const g=getGrad(p);if(g&&g.stops[selIdx]){g.stops[selIdx].pos=Math.max(0,Math.min(100,+this.value||0));renderAll(p);}});
   rebind(spfx+'SelAlp',function(){const g=getGrad(p);if(g&&g.stops[selIdx]){g.stops[selIdx].alpha=+(this.value/100).toFixed(2);sv(spfx+'SelAlpV',this.value);renderAll(p);}});
   rebind(spfx+'SelAlpV',function(){const v=Math.max(0,Math.min(100,+this.value||0));const g=getGrad(p);if(g&&g.stops[selIdx]){g.stops[selIdx].alpha=+(v/100).toFixed(2);sv(spfx+'SelAlp',v);renderAll(p);}});
-  const delId=spfx+'DelStop';const del=document.getElementById(delId);
-  if(del){const dc=del.cloneNode(true);del.parentNode.replaceChild(dc,del);dc.addEventListener('click',()=>{const g=getGrad(p);if(g&&g.stops.length>2){g.stops.splice(selIdx,1);selIdx=Math.min(selIdx,g.stops.length-1);renderAll(p);}});}
-
   const refId=p==='card'?'cardGradRef':(p==='text'?'txtGradRef':p+'GradRef');
   rebind(refId,function(){
     const ref=this.value;
