@@ -720,7 +720,14 @@ function startDrag(which,e){
       return;
     }
     const pct=Math.max(0,Math.min(100,Math.round(((ev.clientX-rect.left)/rect.width)*100)));
-    if(dragIdx>=0&&dragIdx<g.stops.length){g.stops[dragIdx].pos=pct;renderAll(which);}
+    if(dragIdx>=0&&dragIdx<g.stops.length){
+      const draggedStop=g.stops[dragIdx];
+      draggedStop.pos=pct;
+      g.stops.sort((a,b)=>a.pos-b.pos);
+      dragIdx=g.stops.indexOf(draggedStop);
+      selIdx=dragIdx;
+      renderAll(which);
+    }
   };
   const onUp=()=>{isDrag=false;dragIdx=-1;renderAll(which);document.removeEventListener('mousemove',onMove);document.removeEventListener('mouseup',onUp);};
   document.addEventListener('mousemove',onMove);document.addEventListener('mouseup',onUp);onMove(e);
